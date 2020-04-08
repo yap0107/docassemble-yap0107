@@ -1,0 +1,112 @@
+---
+features:
+  css: C4_01_lnf_with_comments.css
+  debug: True
+  hide standard menu: False
+---
+variable name: PYpersonal_info
+use objects: True
+data:
+  - First name: Phoebe
+    Last name: Yap
+    Age: 24
+    Hobbies: Cooking and Baking
+    Do you like pets?: True
+  - First name: Bunny
+    Last name: Yap
+    Age: 23
+    Hobbies: Hopscotch
+    Do you like pets?: True
+  - First name: Panda
+    Last name: Yap
+    Age: 26
+    Hobbies: Sleeping
+    Do you like pets?: False
+  - First name: Turtle
+    Last name: Yap
+    Age: 59
+    Hobbies: Swimming and hiding
+    Do you like pets?: True
+  - First name: Hamster
+    Last name: Yap
+    Age: 60
+    Hobbies: Gathering seeds
+    Do you like pets?: True
+---
+# Column header
+code: |
+  PYcolumn_header = ""
+  
+  for PYitem in PYpersonal_info[0]:
+    PYcolumn_header += PYitem + '|'
+    
+  PYcolumn_header = PYcolumn_header[:-1]
+---
+# Creates the dashes for the table header 
+code: |
+  PYdashes = "---"
+  for i in range(len(PYpersonal_info[0]) - 1):
+    PYdashes += "|---"
+---
+code: | 
+  PYtable_rows = []
+  
+  for PYitem in PYpersonal_info:
+      MDrow = ""
+      for PYkey in PYitem:
+        MDrow += str(PYitem[PYkey]) + '|'
+
+      MDrow = MDrow[:-1]
+
+      PYtable_rows.append(MDrow)
+---
+mandatory: True
+question: Family Information
+subquestion: |
+  ## Information collected for each family member is collected below:
+  ${ PYcolumn_header }
+  ${ PYdashes }
+  %for PYitem in PYtable_rows:
+  ${ PYitem }
+  %endfor
+  
+  ## You will next be asked to confirm that each piece of information is correct.
+buttons:
+  - Continue: continue
+  - Exit: exit
+  - Restart: restart
+---
+question:
+  ${ PYpersonal_info[i]['First name'] }, which of the following data is correct?
+subquestion: |
+fields:
+  Confirm if each information is correct: PYpersonal_info[i]['PYanswers']
+  datatype: checkboxes
+  code: PYpersonal_info[i].values()
+---
+table: PYquestion_table
+rows: PYpersonal_info
+columns:
+  - First name:
+      row_item['First name']
+  - Last name:
+      row_item['Last name']
+  - Age:
+      row_item['Age']
+  - Hobbies:
+      row_item['Hobbies']
+  - Likes pets?:
+      row_item['Do you like pets?']
+  - Information that is correct: |
+      row_item['PYanswers'].true_values()
+---
+mandatory: True
+question: Collated and verified family details
+subquestion: |
+
+    ${ PYquestion_table }
+attachment:
+  docx template file: FamilyInfo.docx
+  valid formats:
+    - pdf
+---
