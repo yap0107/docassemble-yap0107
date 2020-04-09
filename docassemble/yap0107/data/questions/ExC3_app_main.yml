@@ -80,7 +80,7 @@ question:
   ${ PYpersonal_info[i]['First name'] }, which of the following data is correct?
 subquestion: |
 fields:
-  Confirm if each information is correct: PYpersonal_info[i]['PYanswers']
+  Tick the ones that are correct: PYpersonal_info[i]['PYanswers']
   datatype: checkboxes
   code: PYpersonal_info[i].values()
 ---
